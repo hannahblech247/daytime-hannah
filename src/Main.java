@@ -1,6 +1,11 @@
+import utils.*;
+
 public class Main {
 
     public static void main(String args[]){
-    System.out.println("hallo welt");
+        Connection verbindung_server = new Connection("djxmmx.net", 17);
+        verbindung_server.receive();
+
+
     }
 }
