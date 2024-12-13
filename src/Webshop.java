@@ -14,38 +14,31 @@ public class Webshop extends Server {
     public void processMessage(String pClientIP, int pClientPort, String pMessage) {
         String nachrichtenpart_1 = pMessage.split(":")[0];
 
-        if(nachrichtenpart_1.equals("Einhornfurzkissen")){
-            String einhornfurzkissen_groesse = pMessage.split(":")[1];
-            if(einhornfurzkissen_groesse.equals( "S" )|| einhornfurzkissen_groesse.equals("M")|| einhornfurzkissen_groesse.equals("L") || einhornfurzkissen_groesse.equals("XL")) {
-                send(pClientIP, pClientPort, "Bitte Bestätige deine Bestellung eines Einhornfurzkissens in der Größe" + pMessage.split(":")[1]
-                        + " und in der Farbe" + pMessage.split(":")[2] + " mit ja oder nein");
+        switch (nachrichtenpart_1) {
+            case "Einhornfurzkissen" -> {
+                String einhornfurzkissen_groesse = pMessage.split(":")[1];
+                if (einhornfurzkissen_groesse.equals("S") || einhornfurzkissen_groesse.equals("M") || einhornfurzkissen_groesse.equals("L") || einhornfurzkissen_groesse.equals("XL")) {
+                    send(pClientIP, pClientPort, "Bitte Bestätige deine Bestellung eines Einhornfurzkissens in der Größe" + pMessage.split(":")[1]
+                            + " und in der Farbe" + pMessage.split(":")[2] + " mit ja oder nein");
+                } else {
+                    this.send(pClientIP, pClientPort, "Bitte gebe eine Größe aus S;M;L;XL ein!");
+                }
             }
-            else{
-                this.send(pClientIP, pClientPort, "Bitte gebe eine Größe aus S;M;L;XL ein!");
+            case "BESTÄTIGUNG" -> {
+                if (pMessage.split(":")[1].equals("ja")) {
+                    this.send(pClientIP, pClientPort, "Danke für deine Bestellung!");
+                } else if (pMessage.split(":")[1].equals("nein")) {
+                    this.send(pClientIP, pClientPort, "Du wirst nun abgemeldet und deine Daten werden gelöscht!");
+                    this.closeConnection(pClientIP, pClientPort);
+                } else {
+                    this.send(pClientIP, pClientPort, "Bitte gebe ja oder nein ein!");
+                }
             }
-        }
-        else if(nachrichtenpart_1.equals("BESTÄTIGUNG")){
-            if(pMessage.split(":")[1].equals("ja")){
-                this.send(pClientIP, pClientPort, "Danke für deine Bestellung!");
-            }
-            else if(pMessage.split(":")[1].equals("nein")){
-                this.send(pClientIP,pClientPort, "Du wirst nun abgemeldet und deine Daten werden gelöscht!");
+            case "ABMELDEN" -> {
+                this.send(pClientIP, pClientPort, "Du wirst nun abgemeldet und deine Daten gelöscht!");
                 this.closeConnection(pClientIP, pClientPort);
             }
-            else {
-                this.send(pClientIP, pClientPort, "Bitte gebe ja oder nein ein!");
-            }
-
-
-        }
-
-        else if(nachrichtenpart_1.equals("ABMELDEN")){
-            this.send(pClientIP,pClientPort,"Du wirst nun abgemeldet und deine Daten gelöscht!");
-            this.closeConnection(pClientIP, pClientPort);
-        }
-
-        else{
-            this.send(pClientIP,pClientPort, "Bitte gebe eine valide Eingabe ein!");
+            default -> this.send(pClientIP, pClientPort, "Bitte gebe eine valide Eingabe ein!");
         }
 
 
